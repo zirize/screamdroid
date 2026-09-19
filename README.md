@@ -30,9 +30,18 @@ one buffer, one clock to follow. The sender that does this is
 
 ## Install
 
-It is going to Google Play, and the testing track is being set up now. Until the link is here,
-build it yourself — the repository builds with one command and needs nothing but the Android SDK
-and a JDK 17:
+It is on Google Play, on the internal testing track.
+
+**Want in? Send me the Google account address you would install it with** — by email to
+`zirize@gmail.com`, not in an issue, so your address does not end up on a public page. I will add
+you as a tester and send you back the link that installs it from Play. The track takes 100 people.
+
+🔑 It has to be the address of the Google account on the phone; Play matches the tester list
+against the account that opens the link, and any other address will simply say the app is not
+available.
+
+Or build it yourself — the repository builds with one command and needs nothing but the Android
+SDK and a JDK 17:
 
 ```bash
 bash scripts/build.sh            # release APK, signed with the debug key
