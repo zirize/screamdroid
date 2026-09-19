@@ -30,13 +30,22 @@ one buffer, one clock to follow. The sender that does this is
 
 ## Install
 
-Download the APK from [Releases](https://github.com/zirize/screamdroid/releases/latest) and allow
-the install when Android asks about "unknown apps". Open it, and the guide on first launch has the
-three things to do once — the battery setting below, the address to write on the PC, and the quick
-settings tile.
+It is going to Google Play, and the testing track is being set up now. Until the link is here,
+build it yourself — the repository builds with one command and needs nothing but the Android SDK
+and a JDK 17:
 
-🔑 For updates without a store, [Obtainium](https://github.com/ImranR98/Obtainium) follows this
-repository's releases.
+```bash
+bash scripts/build.sh            # release APK, signed with the debug key
+bash scripts/build.sh install    # …and push it to a connected phone
+```
+
+Open it, and the guide on first launch has the three things to do once — the battery setting
+below, the address to write on the PC, and the quick settings tile.
+
+🚫 **No APK is published here, and that is deliberate.** An APK carries the certificate
+it was signed with, and a certificate carries the name and address of whoever made it — readable
+by anyone who has the file, with one command and no password. A store handles that side itself,
+so that is the way this goes out.
 
 ## Status
 

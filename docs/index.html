@@ -71,7 +71,7 @@ footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);co
   An Android receiver for <a href="https://github.com/duncanthrax/scream">Scream</a> network audio.</p>
   <div class="btns">
     <a class="primary" href="https://github.com/zirize/screamdroid">Source on GitHub</a>
-    <a href="https://github.com/zirize/screamdroid/releases/latest">Download the APK</a>
+    <a href="https://github.com/zirize/screamdroid#install">How to install</a>
     <a href="https://zirize.github.io/pipewire-scream/">pipewire-scream (the Linux sender)</a>
   </div>
 </header>
@@ -142,13 +142,15 @@ for music, alerts and video, and the target is "never breaks up", not "tight eno
 
 <h2>Install</h2>
 <ol>
-<li>Download the APK from <a href="https://github.com/zirize/screamdroid/releases/latest">Releases</a>
-    and allow the install (Android asks once for "unknown apps").</li>
+<li>It is going to Google Play, and the testing track is being set up now. Until the link is here,
+    build it from source: <code>bash scripts/build.sh install</code> with a phone connected.</li>
 <li>Open the app and follow the three steps it shows on first launch.</li>
 <li>On the PC, point a Scream sender at the address the app displays.</li>
 </ol>
-<p>For automatic updates from GitHub Releases, <a href="https://github.com/ImranR98/Obtainium">Obtainium</a>
-tracks this repository.</p>
+<p><strong>No APK is published here, and that is deliberate.</strong> An APK carries the
+certificate it was signed with, and a certificate carries the name and address of whoever made
+it — readable by anyone who has the file, with one command and no password. A store handles that
+side itself, so that is the way this goes out.</p>
 
 <h2>The two things that bite</h2>
 <h3>1. Battery use has to be unrestricted</h3>
