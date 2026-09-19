@@ -30,17 +30,24 @@ one buffer, one clock to follow. The sender that does this is
 
 ## Install
 
-It is on Google Play, on the internal testing track.
+It is going to Google Play, on the internal testing track — the track is being set up now.
 
-**Want in? Send me the Google account address you would install it with** — by email to
-`zirize@gmail.com`, not in an issue, so your address does not end up on a public page. I will add
-you as a tester and send you back the link that installs it from Play. The track takes 100 people.
+**Want in? Send the Google account address you would install it with to `zirize@gmail.com`** — by
+email, **not in an issue**, so your address does not end up on a public page. You go on the tester
+list, and the link that installs it from Play comes back to you as soon as the track opens. It
+takes 100 people.
 
-🔑 It has to be the address of the Google account on the phone; Play matches the tester list
-against the account that opens the link, and any other address will simply say the app is not
-available.
+- 🔑 It has to be the address of the **Google account on the phone**. Play matches the tester
+  list against the account that opens the link, so any other address will simply say the app is
+  not available — and that symptom tells you nothing about why.
+- The address is used to add you as a tester and to send you that link. Nothing else. The app
+  itself collects nothing and has no account: see the
+  [privacy policy](https://zirize.github.io/screamdroid/privacy.html).
+- Android **8.0 or newer** (API 26).
+- You will need a PC that sends Scream audio to point it at — on Linux that is
+  [pipewire-scream](https://github.com/zirize/pipewire-scream). This is the receiving half.
 
-Or build it yourself — the repository builds with one command and needs nothing but the Android
+Rather not hand over an address? Build it yourself — the repository builds with one command and needs nothing but the Android
 SDK and a JDK 17:
 
 ```bash
