@@ -33,8 +33,10 @@ one buffer, one clock to follow. The sender that does this is
 It is going to Google Play, on the internal testing track — the track is being set up now.
 
 **Want in? Send the Google account address you would install it with to `zirize@gmail.com`** — by
-email, **not in an issue**, so your address does not end up on a public page. You go on the tester
-list, and the link that installs it from Play comes back to you as soon as the track opens.
+email, **not in an issue**, so your address does not end up on a public page. I put you on the
+tester list and send the link back — and the link starts working once you are on that list, not
+before. Play matches the list against whoever opens it, so it is the order that matters, not the
+link.
 
 - 🔑 It has to be the address of the **Google account on the phone**. Play matches the tester
   list against the account that opens the link, so any other address will simply say the app is
