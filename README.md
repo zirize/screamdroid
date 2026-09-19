@@ -35,7 +35,7 @@ It is going to Google Play, on the internal testing track — the track is being
 **Want in? Send the Google account address you would install it with to `zirize@gmail.com`** — by
 email, **not in an issue**, so your address does not end up on a public page. You go on the tester
 list, and the link that installs it from Play comes back to you as soon as the track opens. It
-takes 100 people.
+takes up to 100 people.
 
 - 🔑 It has to be the address of the **Google account on the phone**. Play matches the tester
   list against the account that opens the link, so any other address will simply say the app is
