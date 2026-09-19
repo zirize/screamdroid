@@ -44,8 +44,8 @@ below, the address to write on the PC, and the quick settings tile.
 
 🚫 **No APK is published here, and that is deliberate.** An APK carries the certificate
 it was signed with, and a certificate carries the name and address of whoever made it — readable
-by anyone who has the file, with one command and no password. A store handles that side itself,
-so that is the way this goes out.
+by anyone who has the file, with one command and no password. What a store hands you is signed
+with the store's own key instead, so none of that travels with it — which is the way this goes out.
 
 ## Status
 
