@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Screamdroid — play your PC's audio on an Android phone, and let a call silence it</title>
+<meta name="description" content="An Android receiver for Scream network audio over UDP. The PC sends its sound over Wi-Fi and the phone plays it through headphones already paired with it, so a desktop with no Bluetooth borrows the phone's. An incoming call silences the stream by itself and hands it back when the call ends." />
+<meta name="author" content="zirize" />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://zirize.github.io/screamdroid/" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://zirize.github.io/screamdroid/" />
+<meta property="og:title" content="Screamdroid — Scream network audio receiver for Android" />
+<meta property="og:description" content="Turn a phone into the Bluetooth adapter a PC does not have - one that knows when you get a call." />
+<meta name="twitter:card" content="summary" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Screamdroid - Scream network audio receiver for Android",
+  "description": "An Android receiver for Scream audio over UDP: a PC streams its sound over Wi-Fi and the phone plays it through its own headphones, muting itself for incoming calls.",
+  "url": "https://zirize.github.io/screamdroid/",
+  "inLanguage": "en",
+  "author": { "@type": "Person", "name": "zirize", "url": "https://github.com/zirize" },
+  "isPartOf": { "@type": "WebSite", "name": "zirize", "url": "https://zirize.github.io/" },
+  "about": ["Scream protocol", "network audio", "Android", "UDP", "PipeWire", "Bluetooth", "low latency"]
+}
+</script>
+<style>
+:root{--bg:#0f1117;--surface:#1a1d27;--border:#2d3148;--accent:#7c6af7;--accent2:#56c8a0;--text:#e2e4ef;--muted:#8b90b0;--radius:10px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:16px;min-height:100vh;display:flex;flex-direction:column}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+header{background:linear-gradient(135deg,#1a1d27 0%,#12141e 100%);border-bottom:1px solid var(--border);padding:56px 20px 44px;text-align:center}
+header h1{font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+header p{font-size:1.05rem;color:var(--muted);max-width:620px;margin:0 auto 22px}
+.btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btns a{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:var(--radius);background:var(--surface);border:1px solid var(--border);color:var(--text);font-size:.9rem;font-weight:500}
+.btns a:hover{text-decoration:none;border-color:var(--accent)}
+.btns a.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+main{max-width:820px;margin:0 auto;padding:48px 20px;flex:1}
+h2{font-size:1.35rem;margin:44px 0 14px;color:var(--text)}
+h2:first-child{margin-top:0}
+h3{font-size:1.05rem;margin:28px 0 10px;color:var(--accent2)}
+p{margin-bottom:14px;color:var(--text)}
+ul,ol{margin:0 0 16px 22px}
+li{margin-bottom:8px}
+code{font-family:ui-monospace,'Cascadia Code',Menlo,monospace;font-size:.88em;background:#12141e;border:1px solid var(--border);border-radius:5px;padding:1px 6px}
+pre{background:#12141e;border:1px solid var(--border);border-radius:var(--radius);padding:16px;overflow-x:auto;margin-bottom:16px}
+pre code{background:none;border:none;padding:0;font-size:.85rem;line-height:1.6}
+table{width:100%;border-collapse:collapse;margin-bottom:18px;font-size:.92rem}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+th{color:var(--muted);font-weight:600;font-size:.82rem;text-transform:uppercase;letter-spacing:.5px}
+.symptoms{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent2);border-radius:var(--radius);padding:20px 24px 8px;margin-bottom:8px}
+.note{background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:.93rem;color:var(--muted)}
+.note strong{color:var(--text)}
+footer{text-align:center;padding:32px 20px;border-top:1px solid var(--border);color:var(--muted);font-size:.85rem}
+</style>
+<style>
+.shots{display:flex;gap:14px;flex-wrap:wrap;justify-content:center;margin:18px 0 26px}
+.shots img{width:230px;border:1px solid var(--border);border-radius:var(--radius)}
+.warn{background:var(--surface);border:1px solid var(--border);border-left:3px solid #d9a441;border-radius:var(--radius);padding:14px 18px;margin-bottom:16px;font-size:.93rem}
+.warn strong{color:var(--text)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Screamdroid</h1>
+  <p>Turn a phone into the Bluetooth adapter a PC does not have — one that knows when you get a call.
+  An Android receiver for <a href="https://github.com/duncanthrax/scream">Scream</a> network audio.</p>
+  <div class="btns">
+    <a class="primary" href="https://github.com/zirize/screamdroid">Source on GitHub</a>
+    <a href="https://github.com/zirize/screamdroid/releases/latest">Download the APK</a>
+    <a href="https://zirize.github.io/pipewire-scream/">pipewire-scream (the Linux sender)</a>
+  </div>
+</header>
+<main>
+
+<h2>The problem</h2>
+<p>A desktop with no Bluetooth of its own cannot reach the headphones already paired with your phone.
+A USB dongle fixes that and creates a new problem: when a call comes in, the PC keeps playing into
+your ears, because nothing inside a dongle can hear the phone ring.</p>
+<p>Screamdroid puts the receiver <em>on the phone</em>, which is the one place that knows. The PC
+sends its audio over Wi-Fi, the phone plays it through whatever is already paired, and an incoming
+call silences the stream and hands it back by itself when the call ends.</p>
+
+<svg viewBox="0 0 820 220" role="img" aria-label="Several PC sources are mixed into one stream, sent over UDP port 4010 to the phone, which plays it through headphones." style="width:100%;height:auto;margin:6px 0 18px">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7c6af7"/>
+    </marker>
+    <marker id="b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#56c8a0"/>
+    </marker>
+  </defs>
+  <g font-family="ui-monospace, Menlo, monospace" font-size="13">
+    <rect x="8" y="46" width="230" height="118" rx="10" fill="#1a1d27" stroke="#2d3148"/>
+    <text x="20" y="36" fill="#8b90b0" font-size="12">PC — PipeWire or Windows</text>
+    <text x="28" y="76" fill="#e2e4ef">music</text>
+    <text x="28" y="100" fill="#e2e4ef">video</text>
+    <text x="28" y="124" fill="#e2e4ef">alerts</text>
+    <path d="M96 71 L150 100 M96 95 L150 100 M96 119 L150 100" stroke="#2d3148" fill="none"/>
+    <rect x="150" y="82" width="76" height="36" rx="8" fill="#12141e" stroke="#2d3148"/>
+    <text x="188" y="105" fill="#56c8a0" text-anchor="middle">mixed</text>
+
+    <path d="M246 100 L336 100" stroke="#7c6af7" stroke-width="2" fill="none" marker-end="url(#a)"/>
+    <text x="291" y="86" fill="#e2e4ef" text-anchor="middle" font-size="12">UDP :4010</text>
+    <text x="291" y="122" fill="#8b90b0" text-anchor="middle" font-size="11">5-byte header</text>
+    <text x="291" y="136" fill="#8b90b0" text-anchor="middle" font-size="11">+ PCM</text>
+
+    <rect x="346" y="46" width="214" height="118" rx="10" fill="#1a1d27" stroke="#56c8a0"/>
+    <text x="358" y="36" fill="#8b90b0" font-size="12">phone</text>
+    <text x="453" y="90" fill="#e2e4ef" text-anchor="middle" font-size="14">Screamdroid</text>
+    <text x="453" y="114" fill="#8b90b0" text-anchor="middle" font-size="11">one stream · one clock</text>
+    <text x="453" y="138" fill="#8b90b0" text-anchor="middle" font-size="11">a call mutes it</text>
+
+    <path d="M568 100 L646 100" stroke="#56c8a0" stroke-width="2" fill="none" marker-end="url(#b)"/>
+    <text x="656" y="96" fill="#e2e4ef" font-size="12">headphones</text>
+    <text x="656" y="116" fill="#8b90b0" font-size="11">already paired</text>
+
+    <text x="8" y="196" fill="#8b90b0" font-size="11">Mixing on the PC is what keeps the phone at one output track, one buffer and one clock to follow.</text>
+  </g>
+</svg>
+
+<div class="warn"><strong>The trade is latency, not stability.</strong> This path is slower than a
+dongle — tens of milliseconds over the network, plus whatever Bluetooth adds after it. It is built
+for music, alerts and video, and the target is "never breaks up", not "tight enough for games".</div>
+
+<h2>What it does</h2>
+<ul>
+<li>Receives Scream audio over UDP, unicast or multicast, on a port you choose.</li>
+<li>Plays through whatever the phone is using: speaker, wired, Bluetooth.</li>
+<li><strong>An incoming call mutes it and it comes back on its own</strong> — roughly a second later.</li>
+<li>Keeps running with the screen off, as a foreground service with a notification you can operate.</li>
+<li>Three buffer presets, from ~30 ms to a safe one for a busy network; the device buffer is opened
+    small rather than walked down, which is what makes the low-latency preset mean something.</li>
+<li>Optionally plays <em>alongside</em> other apps instead of taking the speaker from them.</li>
+<li>A diagnostics screen: throughput, packets, buffer trend, dropouts, and a short event log —
+    because network audio is mostly "why can I not hear it".</li>
+</ul>
+
+<h2>Install</h2>
+<ol>
+<li>Download the APK from <a href="https://github.com/zirize/screamdroid/releases/latest">Releases</a>
+    and allow the install (Android asks once for "unknown apps").</li>
+<li>Open the app and follow the three steps it shows on first launch.</li>
+<li>On the PC, point a Scream sender at the address the app displays.</li>
+</ol>
+<p>For automatic updates from GitHub Releases, <a href="https://github.com/ImranR98/Obtainium">Obtainium</a>
+tracks this repository.</p>
+
+<h2>The two things that bite</h2>
+<h3>1. Battery use has to be unrestricted</h3>
+<p>Otherwise the phone is free to freeze the app once the screen has been off for a few minutes.
+Audio then stops arriving and does not come back until the phone is unlocked — a foreground service,
+a wake lock and a Wi-Fi lock do not prevent it. The app checks this and says so on its main screen,
+with a button to the page that grants it (App info → Battery → Unrestricted).</p>
+<p>It is worth knowing <em>why</em> this is easy to miss: a sender that stops transmitting through
+silence leaves the phone nothing to do, and nothing to do is the condition for going idle. A charger
+hides it too, because a plugged-in phone does not idle at all.</p>
+
+<h3>2. Silence and "not arriving" look the same</h3>
+<p>A sender with silence suppression stops transmitting when the PC goes quiet, so a gap on the wire
+is the normal case rather than a fault. The receiver therefore never treats one as a disconnection —
+and the app cannot tell you which of the two it is. That is why it says "waiting" rather than
+"disconnected", and why the notification names both possible reasons.</p>
+
+<h2>The sending side</h2>
+<p>Any Scream sender works, on Windows or Linux — the wire format is unchanged. On Linux,
+<a href="https://zirize.github.io/pipewire-scream/">pipewire-scream</a> creates a virtual sink and
+sends everything played to it; point its <code>ip</code> at the phone:</p>
+<pre><code>context.modules = [
+    { name = libpipewire-module-scream
+      args = { ip = "192.0.2.42", port = 4010 } }
+]</code></pre>
+<p>Mixing several sources <em>on the PC</em> is worth doing: the phone then receives one stream, one
+output track and one clock to follow, instead of one of each per source.</p>
+
+<h2>How it works</h2>
+<p>Two threads and a ring buffer. One reads the socket and writes into the ring; the other reads the
+ring and writes to <code>AudioTrack</code>. They never wait for each other, and everything the app
+knows about how well it is going comes from counters moving between them. Latency is the ring plus
+the device's own buffer — measuring only the first is how a receiver ends up reporting 30 ms while
+the sound is a fifth of a second late. There is no native code: playback is <code>AudioTrack</code>,
+so the build needs no NDK.</p>
+<p>The architecture, the protocol and what was deliberately not copied from earlier receivers are
+written up in the repository:
+<a href="https://github.com/zirize/screamdroid/blob/main/docs/architecture.md">architecture.md</a>,
+<a href="https://github.com/zirize/screamdroid/blob/main/docs/protocol.md">protocol.md</a>,
+<a href="https://github.com/zirize/screamdroid/blob/main/docs/prior-art.md">prior-art.md</a>.</p>
+
+<h2>Requirements</h2>
+<table>
+<tr><th>What</th><th>Value</th></tr>
+<tr><td>Android</td><td>8.0 (API 26) or newer</td></tr>
+<tr><td>Audio format</td><td>16-bit PCM, mono or stereo, any sample rate the device accepts</td></tr>
+<tr><td>Network</td><td>Wi-Fi on the same network as the sender; unicast recommended</td></tr>
+<tr><td>Permissions</td><td>Network, Wi-Fi state, wake lock, notifications. No account, no location, no analytics</td></tr>
+</table>
+
+<h2>Privacy</h2>
+<p>The app collects nothing and sends nothing anywhere: it opens a UDP port, plays what arrives, and
+keeps its settings on the device. <a href="privacy.html">Privacy policy</a>.</p>
+
+<h2>Licence</h2>
+<p>Apache-2.0. The receiver was written from the published Scream packet format rather than from an
+existing implementation, which is what makes that licence possible — see
+<a href="https://github.com/zirize/screamdroid/blob/main/docs/prior-art.md">prior-art.md</a>.</p>
+
+</main>
+<footer>
+  <p><a href="https://zirize.github.io/">zirize</a> · <a href="https://github.com/zirize/screamdroid">GitHub</a> · <a href="privacy.html">Privacy</a></p>
+</footer>
+</body>
+</html>

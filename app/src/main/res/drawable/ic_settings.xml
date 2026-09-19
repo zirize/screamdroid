@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+     🔑 Traced from the UI mockup's inline SVG (ui/src/*.dc.html in the private repo; the
+        shape, not the drawing). Stroked, not filled, and white so that Compose's Icon tint
+        decides the colour - these appear in three different colours across the screens.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:pathData="M15.2 12a3.2 3.2 0 1 1 -6.4 0a3.2 3.2 0 1 1 6.4 0"
+        android:strokeWidth="1.8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+    <path
+        android:pathData="m19.9 14.3 .9 .5a1.4 1.4 0 0 1 .5 1.9l-1 1.7a1.4 1.4 0 0 1-1.9 .5l-.9-.5a7.6 7.6 0 0 1-1.8 1v1a1.4 1.4 0 0 1-1.4 1.4h-2a1.4 1.4 0 0 1-1.4-1.4v-1a7.6 7.6 0 0 1-1.8-1l-.9 .5a1.4 1.4 0 0 1-1.9-.5l-1-1.7a1.4 1.4 0 0 1 .5-1.9l.9-.5a7.7 7.7 0 0 1 0-2.1l-.9-.5a1.4 1.4 0 0 1-.5-1.9l1-1.7a1.4 1.4 0 0 1 1.9-.5l.9 .5a7.6 7.6 0 0 1 1.8-1v-1A1.4 1.4 0 0 1 11.3 2h2a1.4 1.4 0 0 1 1.4 1.4v1a7.6 7.6 0 0 1 1.8 1l.9-.5a1.4 1.4 0 0 1 1.9 .5l1 1.7a1.4 1.4 0 0 1-.5 1.9l-.9 .5a7.7 7.7 0 0 1 0 2.1z"
+        android:strokeWidth="1.8"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+</vector>

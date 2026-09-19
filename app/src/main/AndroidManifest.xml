@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+      🔑 INTERNET is all a UDP socket needs. Everything else here exists because the receiver has
+         to keep running when nobody is looking at it:
+         - FOREGROUND_SERVICE(_MEDIA_PLAYBACK): the system stops an ordinary process soon after the
+           screen goes off, and from Android 14 a foreground service must declare its type.
+         - WAKE_LOCK and ACCESS_WIFI_STATE: with the screen off, Wi-Fi power saving batches and
+           drops UDP long before the process is stopped. The locks are what stop that.
+         - POST_NOTIFICATIONS: from Android 13 the ongoing notification needs it at runtime. The
+           service still runs if it is refused; it just cannot be seen or operated from the shade.
+         - ACCESS_NETWORK_STATE: so "receive on mobile data" can be off and mean something. It is
+           the only way to tell a metered network from an unmetered one.
+      🚫 No READ_PHONE_STATE: a phone call is handled through audio focus instead.
+      ℹ️ android:usesCleartextTraffic is irrelevant here - this is a raw UDP socket, not HTTP.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Screamdroid">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".service.ReceiverService"
+            android:foregroundServiceType="mediaPlayback"
+            android:exported="false" />
+
+        <!--
+          🔴 This tile is what replaces "start on boot", which target SDK 35 does not allow for a
+             mediaPlayback service. It is the one-press way in from anywhere.
+        -->
+        <service
+            android:name=".service.ScreamdroidTileService"
+            android:icon="@drawable/ic_notification"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+        </service>
+    </application>
+
+</manifest>

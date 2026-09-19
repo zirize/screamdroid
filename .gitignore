@@ -1,0 +1,25 @@
+# What a build leaves behind, and what must never leave this machine.
+#
+# 🔴 local.properties is the important line: it carries this host's SDK path. Without it,
+#    `git add -A` after a build offers to commit it.
+
+# Build output
+build/
+.gradle/
+.kotlin/
+captures/
+*.apk
+*.aab
+*.hprof
+
+# Host- and person-specific; never published
+local.properties
+local.properties.*
+keystore.properties
+*.jks
+*.keystore
+
+# IDE
+.idea/
+*.iml
+.DS_Store

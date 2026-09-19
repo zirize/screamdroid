@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The launcher's monochrome layer, scaled to fill a notification icon.
+
+  🔑 No new coordinates: a status bar icon is tinted white by the system and has to reach the
+     edges of its box, while the launcher layer keeps a wide margin for the adaptive mask. Scaling
+     the same paths rather than redrawing them means the two can never drift apart.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp" android:height="24dp"
+    android:viewportWidth="108" android:viewportHeight="108"
+    android:tint="#FFFFFFFF">
+  <group android:pivotX="54" android:pivotY="54" android:scaleX="2.0" android:scaleY="2.0">
+    <path android:fillColor="#FF000000" android:pathData="M43.5,42.0 H43.5 A3.5,3.5 0 0 1 47.0,45.5 V62.5 A3.5,3.5 0 0 1 43.5,66.0 H43.5 A3.5,3.5 0 0 1 40.0,62.5 V45.5 A3.5,3.5 0 0 1 43.5,42.0 Z"/>
+    <path android:fillColor="#FF000000" android:pathData="M54.0,34.0 H54.0 A3.5,3.5 0 0 1 57.5,37.5 V70.5 A3.5,3.5 0 0 1 54.0,74.0 H54.0 A3.5,3.5 0 0 1 50.5,70.5 V37.5 A3.5,3.5 0 0 1 54.0,34.0 Z"/>
+    <path android:fillColor="#FF000000" android:pathData="M64.5,42.0 H64.5 A3.5,3.5 0 0 1 68.0,45.5 V62.5 A3.5,3.5 0 0 1 64.5,66.0 H64.5 A3.5,3.5 0 0 1 61.0,62.5 V45.5 A3.5,3.5 0 0 1 64.5,42.0 Z"/>
+    <path android:fillColor="#00000000" android:strokeColor="#FF000000" android:strokeWidth="7.0" android:strokeLineCap="round" android:pathData="M33,42 A14,14 0 0 0 33,66"/>
+    <path android:fillColor="#00000000" android:strokeColor="#FF000000" android:strokeWidth="7.0" android:strokeLineCap="round" android:pathData="M75,42 A14,14 0 0 1 75,66"/>
+  </group>
+</vector>

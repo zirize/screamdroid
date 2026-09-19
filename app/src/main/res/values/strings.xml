@@ -1,0 +1,228 @@
+<resources>
+    <!--
+      Default (English) UI strings. Korean translations live in res/values-ko/.
+      🔑 Source and documentation in this tree are English only; keeping the Korean in a
+         resource folder rather than in the code is what lets both be true.
+    -->
+    <string name="app_name">Screamdroid</string>
+
+    <!-- ── First-run guide ────────────────────────────────────────── -->
+    <string name="guide_title">Before you start</string>
+    <string name="guide_intro">This phone plays what the PC sends it. Three things to do once, and one worth knowing.</string>
+    <string name="guide_battery_title">Set battery use to unrestricted</string>
+    <string name="guide_battery_body">Otherwise the phone is free to freeze this app once the screen has been off for a few minutes. Audio then stops arriving and does not come back until the phone is unlocked - a foreground service does not prevent it.</string>
+    <string name="guide_battery_done">Done - battery use is unrestricted.</string>
+    <string name="guide_address_title">Write this address on the PC</string>
+    <string name="guide_address_body">The sender has to be pointed at this phone: put this into the ip and port of scream-sender.conf. A wrong octet looks exactly like a quiet PC from here.</string>
+    <string name="guide_tile_title">Add the quick settings tile</string>
+    <string name="guide_tile_body">Android does not let this app start itself after a reboot, so the tile is how it is switched on without hunting for the app.</string>
+    <string name="guide_icon_title">Getting rid of the status bar icon</string>
+    <string name="guide_icon_body">The app cannot remove it - the system promotes the notification whatever the app asks for. Remove it from the phone\'s own status bar icon list instead: the notification and its three buttons stay.</string>
+    <string name="guide_reopen_note">This is in Settings whenever you want it again.</string>
+    <string name="guide_start">Start</string>
+    <string name="settings_show_guide">Show the first-run guide</string>
+    <string name="settings_version">Version %1$s (%2$d)</string>
+
+    <!-- ── Screens ────────────────────────────────────────────────── -->
+    <string name="screen_settings">Settings</string>
+    <string name="screen_diagnostics">Diagnostics</string>
+
+    <!-- ── State ──────────────────────────────────────────────────── -->
+    <string name="state_stopped">Off</string>
+    <string name="state_waiting">Waiting for audio</string>
+    <string name="state_playing">Receiving</string>
+    <string name="state_paused">Muted</string>
+    <string name="state_error">Error</string>
+    <string name="state_blocked">Not listening</string>
+
+    <string name="waiting_reason">The PC is quiet, or its sender is not pointed at this
+        device.</string>
+    <string name="blocked_mobile_data">Only mobile data is available, and receiving on it is
+        turned off in Settings.</string>
+
+    <!-- ── Main screen ────────────────────────────────────────────── -->
+    <string name="volume">Volume</string>
+    <string name="percent">%1$d%%</string>
+    <string name="value_none">—</string>
+    <string name="stream_from">From</string>
+    <string name="stream_format">Format</string>
+    <string name="stream_buffer">Buffer</string>
+    <string name="stream_uptime">Up for</string>
+    <string name="stream_dropouts">%1$d dropouts</string>
+    <string name="format_value">%1$d kHz · %2$d bit · %3$dch</string>
+    <string name="action_details">Details</string>
+
+    <string name="address_title">Write this into scream-sender.conf on the PC</string>
+    <string name="address_group_title">The group this device has joined</string>
+    <string name="address_unknown">no network</string>
+    <string name="address_qr_title">This device\'s address</string>
+    <string name="action_copy">Copy the address</string>
+    <string name="action_qr">Show as a QR code</string>
+    <string name="action_close">Close</string>
+    <string name="action_back">Back</string>
+
+    <string name="call_preview_link">See what happens when a call arrives</string>
+
+    <!-- ── Call screen ────────────────────────────────────────────── -->
+    <string name="call_banner_title">On a call — muted automatically</string>
+    <string name="call_banner_body">It comes back by itself when the call ends. Nothing to
+        do.</string>
+    <string name="mute_banner_title">Muted by hand</string>
+    <string name="mute_banner_body">Unmuting picks up live: nothing is queued while it is
+        off.</string>
+    <string name="call_preview_title">Preview</string>
+    <string name="call_preview_body">Nothing is muted right now. Call detection arrives with the
+        next step; muting by hand already works exactly like this.</string>
+    <string name="call_discard_title">Still receiving, and throwing it away</string>
+    <string name="call_discard_body">Simply stopping would pile a three-minute call up in the
+        buffer, and hanging up would play audio from three minutes ago. So it is discarded as it
+        arrives, and the buffer is emptied before it fills again.</string>
+    <string name="call_discarded">discarded %1$s</string>
+    <string name="call_elapsed">for %1$s</string>
+    <string name="call_footer">Settings → Calls and alerts chooses between mute, quieten and
+        ignore.</string>
+
+    <!-- ── Settings ───────────────────────────────────────────────── -->
+    <string name="settings_group_receiving">Receiving</string>
+    <string name="settings_port_invalid">%1$d–%2$d</string>
+    <string name="settings_multicast_port">Group port</string>
+    <string name="settings_unicast">Also receive unicast</string>
+    <string name="settings_unicast_note">Packets aimed at this phone\'s own address. Turn it off
+        where that address is not the one the sender has.</string>
+    <string name="settings_unicast_port">Unicast port</string>
+    <string name="settings_receiving_note">The group is always listened for, and it is what keeps
+        working when this phone moves to another network — it is addressed to the group rather
+        than to this phone. Wi-Fi carries group traffic at its slowest rate and some routers drop
+        it, which is what unicast is for. If both arrive at once the group is heard; the two
+        cannot be blended into one another, because the PC is what mixes.</string>
+    <string name="settings_group_address">Group address</string>
+    <string name="settings_group_invalid">224.0.0.0 – 239.255.255.255</string>
+
+    <string name="settings_buffer">Buffer</string>
+    <string name="settings_buffer_note">Target / ceiling, in ms. Stuttering: go right. Sluggish:
+        go left.</string>
+    <string name="preset_low_latency">Low latency</string>
+    <string name="preset_balanced">Balanced</string>
+    <string name="preset_stable">Stable</string>
+    <string name="settings_buffer_floor">On this device it rises to %1$d–%2$d ms — the buffer
+        inside the audio device will not go below that.</string>
+    <string name="settings_applies_now">Changes apply straight away — no need to stop and
+        start.</string>
+
+    <string name="settings_group_interruptions">Calls and alerts</string>
+    <string name="settings_on_call">When a call arrives</string>
+    <string name="call_behavior_mute">Mute</string>
+    <string name="call_behavior_duck">Quieten</string>
+    <string name="call_behavior_ignore">Ignore</string>
+    <string name="settings_duck_on_notification">Quieten briefly for notification sounds</string>
+
+    <string name="settings_group_power">Power and starting</string>
+    <string name="settings_save_battery">Save battery while silent</string>
+    <string name="settings_save_battery_note">On battery, the audio engine is stopped once
+        everything goes quiet. Short sounds - a click, a chime - then arrive about a tenth of a
+        second late, because the engine has to start again first. While charging it is always
+        kept running.</string>
+    <string name="settings_low_latency_wifi">Low-latency Wi-Fi</string>
+    <string name="settings_low_latency_wifi_note">Stops the radio batching packets. Costs
+        battery, and is handed back by itself after ten quiet minutes. Android applies it only
+        while the screen is on, so with the screen off the buffer is what carries you.</string>
+    <string name="settings_allow_mobile">Receive on mobile data</string>
+    <string name="settings_allow_mobile_note">The sender is normally on the same network, so this
+        is off by default.</string>
+    <string name="settings_start_on_boot">Start on boot</string>
+    <string name="settings_start_on_boot_why">Android does not let a media playback service start
+        at boot. Use the quick settings tile instead.</string>
+    <string name="settings_not_possible">Not possible</string>
+    <string name="settings_add_tile">Add the quick settings tile</string>
+    <string name="settings_add_tile_manually">Open quick settings, tap the edit (pencil) button,
+        and drag Screamdroid into the panel.</string>
+
+    <!-- ── Diagnostics ────────────────────────────────────────────── -->
+    <string name="diag_rate">Arriving</string>
+    <string name="diag_packets">Packets</string>
+    <string name="diag_buffer_now">Buffer now</string>
+    <string name="diag_dropouts">Dropouts</string>
+    <string name="unit_mbps">Mbps</string>
+    <string name="unit_per_second">/s</string>
+    <string name="unit_ms_bare">ms</string>
+    <string name="unit_ms">%1$d ms</string>
+    <string name="diag_buffer_trend">Buffer over time</string>
+    <string name="diag_last_minutes">last %1$d min</string>
+    <string name="diag_trend_scale">ceiling %1$d ms · target %2$d ms</string>
+    <string name="diag_trend_now">now %1$d ms</string>
+    <string name="diag_last_sender">Last sender</string>
+    <string name="diag_format">Format</string>
+    <string name="diag_device_buffer">Device buffer</string>
+    <string name="diag_device_buffer_value">%1$d ms (device offered %2$d)</string>
+    <string name="diag_format_changes">Format changes</string>
+    <string name="diag_discarded">Discarded on purpose</string>
+    <string name="diag_rejected">Rejected packets</string>
+    <string name="diag_overflow">Overflowed (bytes)</string>
+    <string name="diag_trimmed">Trimmed</string>
+    <string name="diag_uptime">Up for</string>
+    <string name="diag_recent">Recent</string>
+    <string name="diag_recent_empty">Nothing yet.</string>
+    <string name="action_copy_report">Copy report</string>
+    <string name="action_reset_counters">Reset counters</string>
+
+    <!-- Battery exemption: the phone freezes the app while idle without it. -->
+    <string name="power_warning_title">Sound stops when the screen is off</string>
+    <string name="power_warning_body">This phone is allowed to freeze Screamdroid while it is idle. Audio then stops arriving and does not come back until the phone is unlocked. Set battery use to unrestricted to stop that.</string>
+    <string name="power_warning_action">Open battery settings</string>
+    <string name="power_warning_where">App info → Battery → Unrestricted</string>
+    <string name="diag_battery">Battery</string>
+    <string name="diag_battery_unrestricted">unrestricted</string>
+    <string name="diag_battery_optimised">optimised · can be frozen</string>
+
+    <string name="event_started">listening started</string>
+    <string name="event_stopped">stopped</string>
+    <string name="event_rebound">rebound</string>
+    <string name="event_format_changed">format changed</string>
+    <string name="event_device_buffer">device buffer</string>
+    <string name="event_underrun">buffer ran dry</string>
+    <string name="event_device_released">audio device handed back</string>
+    <string name="event_resumed">audio back · buffer refilling</string>
+    <string name="event_suspended">the system stopped the app</string>
+    <string name="event_muted">muted</string>
+    <string name="event_unmuted">unmuted</string>
+    <string name="event_blocked">stopped listening · mobile data</string>
+    <string name="event_counters_reset">counters reset</string>
+    <string name="event_error">error</string>
+
+    <string name="state_call">On a call</string>
+    <string name="state_focus">Standing aside</string>
+    <string name="stopped_by_focus">Another app took the speaker for good, so this switched itself off. Turn it back on above, or from the quick settings tile.</string>
+    <string name="interrupted_reason">Still reading the network and discarding it, so it picks up live rather than replaying the gap.</string>
+    <string name="ducked_reason">Turned down for a moment while something else is being heard.</string>
+    <string name="focus_banner_title">Another app is using the speaker</string>
+    <string name="focus_banner_body">It comes back by itself when that sound ends. Nothing to do.</string>
+    <string name="notification_call">On a call — muted automatically</string>
+    <string name="notification_focus">Standing aside — muted automatically</string>
+    <string name="settings_share">Share with other apps</string>
+    <string name="settings_share_note">Play alongside a music app or a video instead of taking the speaker from it. A call still silences this; a notification quietens it rather than the system doing so.</string>
+    <string name="settings_call_note">Noticed through audio focus, so no phone permission is asked for — and alarms, navigation and other apps are covered as well as calls.</string>
+    <string name="event_call_muted">call · muted</string>
+    <string name="event_focus_muted">gave way · muted</string>
+    <string name="event_ducked">turned down</string>
+    <string name="event_interruption_over">back · buffer refilling</string>
+    <string name="event_stopped_by_focus">another app took the speaker · stopped</string>
+
+    <!-- ── Notification and tile ──────────────────────────────────── -->
+    <string name="channel_receiver">Receiver</string>
+    <string name="channel_receiver_description">Shows what the receiver is doing while it
+        runs.</string>
+    <string name="notification_receiving_from">Receiving — %1$s</string>
+    <string name="notification_waiting">Waiting — no audio arriving</string>
+    <string name="notification_paused">Muted</string>
+    <string name="notification_blocked">Not listening — mobile data</string>
+    <string name="paused_reason">Still reading the network and discarding it, so resuming
+        picks up live rather than replaying the gap.</string>
+    <string name="notification_error">Receiver stopped</string>
+    <string name="notification_format">%1$d kHz · %2$d bit · %3$dch · %4$d ms</string>
+    <string name="action_pause">Mute</string>
+    <string name="action_resume">Unmute</string>
+    <string name="action_share">Share</string>
+    <string name="action_unshare">Stop sharing</string>
+    <string name="action_turn_off">Turn off</string>
+    <string name="tile_off">Off</string>
+</resources>

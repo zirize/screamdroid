@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      🔑 Colours live in Compose (ui/Theme.kt); this XML theme only decides what the window looks
+         like before the first frame is drawn. Getting the background wrong here is what makes an
+         app flash white on a dark theme.
+    -->
+    <style name="Theme.Screamdroid" parent="android:Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/surface</item>
+        <item name="android:statusBarColor">@color/surface</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+    </style>
+</resources>

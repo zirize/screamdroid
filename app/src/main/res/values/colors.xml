@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 🔑 The accent is the app's one tunable colour; the icon uses a darker
+         shade of it. Everything else is fixed. -->
+    <color name="accent">#4FC3A1</color>
+    <color name="surface">#101413</color>
+</resources>
