@@ -30,7 +30,7 @@ one buffer, one clock to follow. The sender that does this is
 
 ## Install
 
-It is going to Google Play, on the internal testing track — the track is being set up now.
+It is on Google Play, on the internal testing track.
 
 **Want in? Send the Google account address you would install it with to `zirize@gmail.com`** — by
 email, **not in an issue**, so your address does not end up on a public page. I put you on the
