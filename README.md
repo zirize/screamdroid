@@ -2,6 +2,10 @@
 
 📄 Project page: **[Screamdroid — play your PC's audio on an Android phone, and let a call silence it](https://zirize.github.io/screamdroid/)** · More projects: **[zirize.github.io](https://zirize.github.io/)**
 
+<p align="center">
+  <img src="docs/assets/feature-banner.png" alt="Screamdroid — play your PC's audio on an Android phone" width="100%">
+</p>
+
 **Turn a phone into the Bluetooth adapter a PC doesn't have - one that knows when you get a call.**
 
 An Android receiver for [Scream](https://github.com/duncanthrax/scream) audio over UDP. The PC
@@ -27,6 +31,17 @@ alerts and video, and the target is "never breaks up", not "tight enough for gam
 Several sources are mixed **on the PC**, so the phone receives a single stream: one output track,
 one buffer, one clock to follow. The sender that does this is
 [pipewire-scream](https://github.com/zirize/pipewire-scream); any Scream sender works.
+
+## Screenshots
+
+<p align="center">
+  <img src="docs/assets/showcase.png" alt="Screamdroid app screens" width="100%">
+</p>
+
+| Playing Stream | Incoming Call Mute | Buffer & Latency | Live Diagnostics |
+|:---:|:---:|:---:|:---:|
+| <img src="docs/assets/screen-main.png" width="220" alt="Main Screen"> | <img src="docs/assets/screen-call.png" width="220" alt="Call Screen"> | <img src="docs/assets/screen-settings.png" width="220" alt="Settings Screen"> | <img src="docs/assets/screen-diagnostics.png" width="220" alt="Diagnostics Screen"> |
+| Real-time audio spectrum & live buffer | Auto-mutes stream when phone rings | Latency tuning down to ~30ms | Bitrates, packet rate & sparkline |
 
 ## Install
 
