@@ -33,8 +33,8 @@ android {
     targetSdk = 36
     // 🔴 **versionCode only ever goes up, and a store refuses one it has already seen.** A
     //    skipped number costs nothing; a repeated one costs a rebuild.
-    versionCode = 2
-    versionName = "1.0.1"
+    versionCode = 3
+    versionName = "1.1.0"
   }
 
   signingConfigs {
