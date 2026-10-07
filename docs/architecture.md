@@ -94,6 +94,15 @@ grow beyond half of what the device offered, the device's own size goes back onc
 touched again: the worst case is exactly what the app did before any of this existed, reached in
 one step.
 
+🔴 **What a bad patch learned is forgotten after five minutes closed.** The size reached is carried
+into the next open, so a device released after a minute of quiet does not break up at the size it
+already outgrew. But it used to be carried for as long as the app lived, and the device's own size
+can be most of a second on some phones over Bluetooth: one bad stretch of Wi-Fi while walking about
+left the delay at 1000 ms until the receiver was stopped and started again (reported 2026-09-28).
+Now the device has to have been closed for `DeviceBufferTuner.FORGET_AFTER_MS` - five minutes -
+before the next open starts small again. A shorter pause keeps what was learned, because a network
+that was bad a minute ago usually still is.
+
 🔴 **Three different things are called an underrun, and only one of them is about the buffer.**
 
 | what happened | what it means | how it is told apart |

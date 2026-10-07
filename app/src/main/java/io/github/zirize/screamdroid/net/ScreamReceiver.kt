@@ -538,6 +538,11 @@ class ScreamReceiver(
                     drift.reset()
                     padding = false
                     fadeInNext = true
+                    // 🔑 Nothing is held any more, so nothing is shown. The figure is only written
+                    //    further down, which this branch never reaches - left alone, the main
+                    //    screen went on showing the last delay for as long as the quiet lasted.
+                    stats.fillMs.set(0)
+                    stats.deviceMs.set(0)
                 }
                 // 🔴 **And then wait here, rather than falling through to open it again.**
                 //    Releasing clears the epoch, and the format on the wire has not changed - so

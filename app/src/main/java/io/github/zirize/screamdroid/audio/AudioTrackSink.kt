@@ -3,6 +3,7 @@ package io.github.zirize.screamdroid.audio
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import android.os.SystemClock
 import android.util.Log
 import io.github.zirize.screamdroid.net.ScreamHeader
 import io.github.zirize.screamdroid.net.ScreamProtocol
@@ -37,9 +38,13 @@ class AudioTrackSink : AudioSink {
      * 🚫 Deliberately not persisted to disk. The right size depends on which output is connected -
      *    speaker, wire, Bluetooth - and the app is not told when that changes, so a figure
      *    remembered across restarts would be a figure learned about some other output.
+     * 🔴 **And not kept forever in memory either** - see DeviceBufferTuner.FORGET_AFTER_MS.
      */
     private var learnedFor: ScreamHeader? = null
     private var learnedFrames = 0
+
+    /** When the device was last closed, on the elapsed-realtime clock; 0 while it is open. */
+    private var releasedAt = 0L
 
     /**
      * 🔑 Kept here as well as on the track, because [open] builds a **new** `AudioTrack` - after a
@@ -147,8 +152,16 @@ class AudioTrackSink : AudioSink {
         }
 
         val granularity = maxOf(1, header.sampleRate / 200)      // 5 ms
-        val carried = if (learnedFor == header) learnedFrames else 0
-        val want = if (carried in 1..startFrames) {
+        val closedForMs = if (releasedAt == 0L) 0L else SystemClock.elapsedRealtime() - releasedAt
+        val carried = if (learnedFor == header) {
+            DeviceBufferTuner.carriedSize(learnedFrames, closedForMs, startFrames)
+        } else {
+            0
+        }
+        if (learnedFor == header && carried == 0) {
+            Log.i(TAG, "forgot $learnedFrames frames after ${closedForMs / 1000} s closed")
+        }
+        val want = if (carried > 0) {
             carried
         } else {
             DeviceBufferTuner.openSize(
@@ -283,6 +296,7 @@ class AudioTrackSink : AudioSink {
             }
             it.release()
             framesWritten = 0L
+            releasedAt = SystemClock.elapsedRealtime()
         }
         track = null
         openFormat = null

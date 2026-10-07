@@ -152,6 +152,36 @@ class DeviceBufferTuner(
 
     companion object {
         /**
+         * How long the device has to have been closed before what was learned about it is let go.
+         *
+         * 🔴 **Growth only ever went one way, and it outlived the patch that caused it.** A bad
+         *    stretch of Wi-Fi grows the buffer, and past [ceilingFrames] hands the device its own
+         *    size back - which over Bluetooth on a budget phone can be most of a second. That size
+         *    was then carried into every reopen for as long as the app lived, so the delay a single
+         *    bad afternoon bought stayed on screen the next morning. Reported 2026-09-28: the main
+         *    screen showing 1000 ms on the phone in daily use.
+         *
+         * 🔑 **Five minutes, not the minute that closes the device.** The device is let go after a
+         *    minute of silence, and a network that was bad a minute ago is likely still bad - so a
+         *    short pause keeps what was learned, and only a real break starts small again. Starting
+         *    small costs nothing if the network has recovered, and if it has not, the growth that
+         *    follows is the same one that happened the first time.
+         */
+        const val FORGET_AFTER_MS = 5L * 60_000L
+
+        /**
+         * The size worth carrying into a reopen, or 0 to open at [openSize] instead.
+         *
+         * @param learnedFrames what the device was set to when it was last closed, 0 if never
+         * @param closedForMs how long it has been closed since
+         */
+        fun carriedSize(learnedFrames: Int, closedForMs: Long, startFrames: Int): Int = when {
+            learnedFrames !in 1..startFrames -> 0
+            closedForMs >= FORGET_AFTER_MS -> 0
+            else -> learnedFrames
+        }
+
+        /**
          * The size to open the device at: one of the player's writes, plus a margin.
          *
          * 🔑 **That is all the device's own buffer has to be.** It exists so a write does not have

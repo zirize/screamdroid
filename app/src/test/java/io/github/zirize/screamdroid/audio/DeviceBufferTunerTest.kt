@@ -152,4 +152,23 @@ class DeviceBufferTunerTest {
         assertEquals(2000, DeviceBufferTuner.openSize(1152, 2000, 7696, 240))
         assertEquals(900, DeviceBufferTuner.openSize(1152, 16, 900, 240))
     }
+
+    /**
+     * 🔴 A bad patch of Wi-Fi used to leave its growth behind for as long as the app lived.
+     *    A short pause keeps it - the network is probably still bad - and a real break forgets it.
+     */
+    @Test
+    fun forgetsWhatABadPatchLearnedOnlyAfterARealBreak() {
+        val learned = 7696
+        assertEquals(learned, DeviceBufferTuner.carriedSize(learned, 0L, 7696))
+        assertEquals(learned, DeviceBufferTuner.carriedSize(learned, 61_000L, 7696))
+        assertEquals(0, DeviceBufferTuner.carriedSize(learned, DeviceBufferTuner.FORGET_AFTER_MS, 7696))
+    }
+
+    /** Nothing learned, or a figure the device can no longer hold, is not carried at all. */
+    @Test
+    fun carriesNothingItCannotUse() {
+        assertEquals(0, DeviceBufferTuner.carriedSize(0, 0L, 7696))
+        assertEquals(0, DeviceBufferTuner.carriedSize(9000, 0L, 7696))
+    }
 }
