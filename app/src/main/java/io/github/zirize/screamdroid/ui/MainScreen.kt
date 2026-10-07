@@ -265,9 +265,10 @@ private fun VolumeRow(snapshot: ReceiverSnapshot, onVolumeChange: (Int) -> Unit)
             value = dragged,
             onValueChange = {
                 dragged = it
-                onVolumeChange(it.toInt())
+                onVolumeChange(Volume.snap(it))
             },
             valueRange = 0f..Volume.MAX_PERCENT.toFloat(),
+            steps = Volume.SLIDER_STEPS,
             modifier = Modifier.weight(1f).padding(horizontal = 12.dp),
             colors = sliderColors,
             thumb = {

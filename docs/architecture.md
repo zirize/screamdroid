@@ -389,8 +389,11 @@ inaudible in the last few per cent.
 🔑 **And it goes past 100%, to 150% - +20 dB.** The phone has one media volume for every app, so
 somebody who wants another app quiet and this stream loud has no way to say so: turning the phone
 down turns both down. Past 100 the fader gets this stream back up on its own. `setVolume` stops at
-1, so the part above it is done on the samples (`audio/Boost.kt`), linear up to half of full scale
-and bent smoothly above it so a boosted peak never wraps or clips flat. 🚫 Not `LoudnessEnhancer`:
+1, so the part above it is done on the samples (`audio/Boost.kt`). A peak that would go over full
+scale turns the gain down at once and lets it climb back over a quarter second, so the waveform is
+scaled, never bent. 🔴 The first version bent it instead - a stateless curve, linear to half of full
+scale - and a boost pushes most of a song past that point, so everything above 100 sounded squashed.
+The slider snaps to 5% notches, 2 dB each. 🚫 Not `LoudnessEnhancer`:
 an effect on the session is what the framework refuses a fast track, and latency is what this app
 is built around. Other usages with their own volume slider were ruled out one by one - an alarm
 also plays through the speaker with headphones in, a notification is silenced by the ringer

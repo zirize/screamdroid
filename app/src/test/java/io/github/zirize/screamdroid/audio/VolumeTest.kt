@@ -48,4 +48,14 @@ class VolumeTest {
             previous = gain
         }
     }
+
+    @Test
+    fun theSliderSnapsToFivePerCent() {
+        assertEquals(0, Volume.snap(2.4f))
+        assertEquals(5, Volume.snap(2.6f))
+        assertEquals(100, Volume.snap(98f))
+        assertEquals(Volume.MAX_PERCENT, Volume.snap(1_000f))
+        // 0, 5, ... 150: the ends plus the steps between them
+        assertEquals(Volume.MAX_PERCENT / 5 + 1, Volume.SLIDER_STEPS + 2)
+    }
 }

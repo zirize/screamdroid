@@ -485,6 +485,9 @@ class ScreamReceiver(
         //    whoever is watching, so measuring it here costs one pass over a chunk and nothing else.
         val peaks = IntArray(2)
 
+        // 🔑 Stateful: the gain it has backed off to carries across chunks. See Boost.
+        val limiter = Boost()
+
         // 🔴 A stream does not stop at a zero crossing. These three carry the last sample played
         //    across the gap so a drought is entered with a decay and left with a fade, instead of
         //    with a step in each direction - a step is heard as a click. See Ramp.
@@ -706,7 +709,7 @@ class ScreamReceiver(
                         // 🔑 Before the last frame is read, so a drought decays from the sample
                         //    that was actually played, boosted, rather than jumping down to the
                         //    unboosted one.
-                        Boost.apply(chunk, 0, n, boost)
+                        limiter.apply(chunk, 0, n, header.channels, header.sampleRate, boost)
                         Ramp.readLastFrame(chunk, 0, n, header.channels, lastFrame)
                         // 🔑 Measured after the ramp and scaled by the fader, so the meter shows
                         //    what the speaker is about to make - fades and volume included -

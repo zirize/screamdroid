@@ -24,6 +24,12 @@ object Volume {
     const val DEFAULT_PERCENT = 80
     const val UNITY_PERCENT = 100
 
+    /**
+     * The slider snaps to this. At 40 dB over 100 that is 2 dB a notch - about the smallest change
+     * that is plainly heard, so no notch is wasted and none jumps.
+     */
+    const val STEP_PERCENT = 5
+
     /** Top of the slider: unity plus [BOOST_DB] at the same dB per step. */
     const val MAX_PERCENT = UNITY_PERCENT + (BOOST_DB / RANGE_DB * UNITY_PERCENT).toInt()
 
@@ -38,4 +44,11 @@ object Volume {
         val db = RANGE_DB * (p / 100.0) - RANGE_DB
         return Math.pow(10.0, db / 20.0).toFloat()
     }
+
+    /** [percent] on the nearest notch. */
+    fun snap(percent: Float): Int =
+        (Math.round(percent / STEP_PERCENT) * STEP_PERCENT).coerceIn(0, MAX_PERCENT)
+
+    /** Notches strictly between the ends, which is what a Compose `Slider` counts as `steps`. */
+    const val SLIDER_STEPS = MAX_PERCENT / STEP_PERCENT - 1
 }
