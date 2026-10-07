@@ -17,12 +17,23 @@
 #
 #    ⚠️ `grep -x` will not match - a dex string has its length byte in front of it.
 
-# 🔴 **Two store recommendations, and one of them deletes the evidence for the other.** R8
-#    inlines the enableEdgeToEdge() call at MainActivity.kt:66 - the behaviour stays, but every
-#    reference to androidx.activity.EdgeToEdge disappears from the dex (measured here: 99 -> 0).
-#    Play looks for that call in the uploaded bytecode, so an app that does edge-to-edge properly
-#    can still be told to do it. Keeping the class costs nothing measurable and keeps the two
-#    recommendations from cancelling each other out.
-#    ℹ️ Reported by the droid_custom_vncviewer session, which hit it first.
-#    ❓ Still to confirm from the console after the next upload: that the panel does go away.
+# ℹ️ **Kept for a reason that did not hold up, and left in because it costs nothing.** Read
+#    the three lines below in order - they are a measurement, an observation, and an inference,
+#    and only the first two are ours to stand behind.
+#
+#    🔴 **Measured:** R8 inlines the enableEdgeToEdge() call at MainActivity.kt:66. The
+#       behaviour stays, but every reference to androidx.activity.EdgeToEdge leaves the dex -
+#       99 of them here, 5 in the sibling app, 0 in both afterwards. The rule brings them back.
+#    ✅ **Observed** (console, 2026-09-19): no edge-to-edge item was ever raised for this app,
+#       on any of the console screens, before or after the upload. So the rule was not needed to
+#       make a warning go away - there was no warning. The fear it was written against did not
+#       happen.
+#    ❓ **Inferred, not stated by anyone:** targetSdk 36 means the system enforces edge-to-edge,
+#       so there may be nothing left to recommend. Google has not said this. Do not rely on it.
+#
+#    🔑 So why keep it? Because the disappearance is real and free to undo, and the next
+#    person to raise targetSdk or read the bytecode should not have to rediscover it. Delete it
+#    if it ever gets in the way; nothing here depends on it.
+#    ℹ️ The inlining was found by the droid_custom_vncviewer session and confirmed in both
+#    repositories; the console screens were read by the play.google.com session.
 -keep class androidx.activity.EdgeToEdge { *; }
