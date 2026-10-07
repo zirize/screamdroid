@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.zirize.screamdroid.R
+import io.github.zirize.screamdroid.audio.Volume
 import io.github.zirize.screamdroid.service.PauseCause
 import io.github.zirize.screamdroid.service.ReceiverSnapshot
 
@@ -114,7 +115,7 @@ fun CallScreen(snapshot: ReceiverSnapshot, onBack: () -> Unit) {
                     ) {
                         Box(
                             Modifier
-                                .fillMaxWidth(snapshot.settings.volumePercent / 100f)
+                                .fillMaxWidth(snapshot.settings.volumePercent / Volume.MAX_PERCENT.toFloat())
                                 .height(6.dp)
                                 .background(Tone.Dim),
                         )

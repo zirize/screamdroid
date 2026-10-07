@@ -106,7 +106,7 @@ data class Settings(
         fun sanitizeGroup(text: String?): String =
             text?.let { parseGroup(it) } ?: ScreamProtocol.DEFAULT_MULTICAST_GROUP
 
-        fun sanitizeVolume(percent: Int): Int = percent.coerceIn(0, 100)
+        fun sanitizeVolume(percent: Int): Int = percent.coerceIn(0, Volume.MAX_PERCENT)
 
         const val MIN_PORT = 1024
         const val MAX_PORT = 65535

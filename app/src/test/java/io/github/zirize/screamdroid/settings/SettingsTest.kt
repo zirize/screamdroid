@@ -1,6 +1,7 @@
 package io.github.zirize.screamdroid.settings
 
 import io.github.zirize.screamdroid.audio.BufferPolicy
+import io.github.zirize.screamdroid.audio.Volume
 import io.github.zirize.screamdroid.net.ScreamProtocol
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -94,7 +95,7 @@ class SettingsTest {
     @Test
     fun aStoredVolumeIsBroughtBackIntoRange() {
         assertEquals(0, Settings.sanitizeVolume(-10))
-        assertEquals(100, Settings.sanitizeVolume(1_000))
+        assertEquals(Volume.MAX_PERCENT, Settings.sanitizeVolume(1_000))
         assertEquals(37, Settings.sanitizeVolume(37))
     }
 

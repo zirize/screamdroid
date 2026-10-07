@@ -386,6 +386,17 @@ linear meter spends its whole length on the top few dB and never leaves the floo
 Wired straight to `AudioTrack.setVolume` a slider would do nothing for its top half and drop to
 inaudible in the last few per cent.
 
+🔑 **And it goes past 100%, to 150% - +20 dB.** The phone has one media volume for every app, so
+somebody who wants another app quiet and this stream loud has no way to say so: turning the phone
+down turns both down. Past 100 the fader gets this stream back up on its own. `setVolume` stops at
+1, so the part above it is done on the samples (`audio/Boost.kt`), linear up to half of full scale
+and bent smoothly above it so a boosted peak never wraps or clips flat. 🚫 Not `LoudnessEnhancer`:
+an effect on the session is what the framework refuses a fast track, and latency is what this app
+is built around. Other usages with their own volume slider were ruled out one by one - an alarm
+also plays through the speaker with headphones in, a notification is silenced by the ringer
+switch, a call routes to the earpiece and would trip the app's own call detection, and the
+accessibility volume only moves while an accessibility service runs.
+
 🔑 **The address on the main screen is what the *PC* needs.** Getting audio here means writing
 that exact string into a file on the sending machine, and a mistyped octet is indistinguishable
 from a quiet PC at this end - so it is one tap to copy and one to scan.

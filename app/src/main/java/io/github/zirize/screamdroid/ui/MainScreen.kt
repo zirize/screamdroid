@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import io.github.zirize.screamdroid.R
+import io.github.zirize.screamdroid.audio.Volume
 import io.github.zirize.screamdroid.net.ScreamReceiver
 import io.github.zirize.screamdroid.service.Blocked
 import io.github.zirize.screamdroid.service.PauseCause
@@ -266,7 +267,7 @@ private fun VolumeRow(snapshot: ReceiverSnapshot, onVolumeChange: (Int) -> Unit)
                 dragged = it
                 onVolumeChange(it.toInt())
             },
-            valueRange = 0f..100f,
+            valueRange = 0f..Volume.MAX_PERCENT.toFloat(),
             modifier = Modifier.weight(1f).padding(horizontal = 12.dp),
             colors = sliderColors,
             thumb = {

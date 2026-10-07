@@ -25,16 +25,24 @@ class VolumeTest {
 
     @Test
     fun itNeverLeavesTheRangeTheDeviceAccepts() {
-        for (percent in -50..150) {
+        for (percent in -50..Volume.UNITY_PERCENT) {
             val gain = Volume.gain(percent)
             assertTrue("$percent produced $gain", gain in 0f..1f)
         }
     }
 
+    /** 🔑 The top of the slider is exactly the boost asked for, and nothing past it gets more. */
+    @Test
+    fun theBoostTopsOutAtTwentyDecibels() {
+        assertEquals(150, Volume.MAX_PERCENT)
+        assertEquals(10f, Volume.gain(Volume.MAX_PERCENT), 0.001f)
+        assertEquals(Volume.gain(Volume.MAX_PERCENT), Volume.gain(1_000), 0f)
+    }
+
     @Test
     fun itOnlyEverGoesUp() {
         var previous = -1f
-        for (percent in 0..100) {
+        for (percent in 0..Volume.MAX_PERCENT) {
             val gain = Volume.gain(percent)
             assertTrue("$percent went down", gain > previous)
             previous = gain

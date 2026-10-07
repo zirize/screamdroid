@@ -4,6 +4,7 @@ import android.os.Process
 import android.os.SystemClock
 import android.util.Log
 import io.github.zirize.screamdroid.audio.AudioSink
+import io.github.zirize.screamdroid.audio.Boost
 import io.github.zirize.screamdroid.audio.BufferPolicy
 import io.github.zirize.screamdroid.audio.DriftController
 import io.github.zirize.screamdroid.audio.IdlePolicy
@@ -76,14 +77,24 @@ class ScreamReceiver(
     @Volatile var keepAwake: Boolean = false
 
     /**
-     * Playback gain, 0..1. Handed straight to the sink, which keeps it across a reopen.
+     * Playback gain, 0 and up. The part up to 1 is handed straight to the sink, which keeps it
+     * across a reopen; the part above 1 is [boost].
      *
      * 🔑 Changing it is a property write, not a restart: the device applies gain itself, so the
      *    stream never stops to be turned down.
      */
     var gain: Float
-        get() = sink.gain
-        set(value) { sink.gain = value }
+        get() = sink.gain * boost
+        set(value) {
+            sink.gain = value.coerceIn(0f, 1f)
+            boost = value.coerceAtLeast(1f)
+        }
+
+    /**
+     * 🔑 Gain past what the device can apply, done on the samples by [Boost] before they are
+     *    written - see audio/Volume.kt for why the slider goes past 1.
+     */
+    @Volatile private var boost: Float = 1f
 
     enum class State { STOPPED, WAITING, PLAYING, PAUSED, ERROR }
 
@@ -692,6 +703,10 @@ class ScreamReceiver(
                             fadeInNext = false
                         }
                         padding = false
+                        // 🔑 Before the last frame is read, so a drought decays from the sample
+                        //    that was actually played, boosted, rather than jumping down to the
+                        //    unboosted one.
+                        Boost.apply(chunk, 0, n, boost)
                         Ramp.readLastFrame(chunk, 0, n, header.channels, lastFrame)
                         // 🔑 Measured after the ramp and scaled by the fader, so the meter shows
                         //    what the speaker is about to make - fades and volume included -
