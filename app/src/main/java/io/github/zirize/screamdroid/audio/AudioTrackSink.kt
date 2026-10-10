@@ -2,6 +2,7 @@ package io.github.zirize.screamdroid.audio
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
+import android.media.AudioRouting
 import android.media.AudioTrack
 import android.os.SystemClock
 import android.util.Log
@@ -24,6 +25,7 @@ import io.github.zirize.screamdroid.net.ScreamProtocol
  */
 class AudioTrackSink : AudioSink {
 
+    @Volatile
     private var track: AudioTrack? = null
     private var openFormat: ScreamHeader? = null
     private var framesWritten = 0L
@@ -36,8 +38,8 @@ class AudioTrackSink : AudioSink {
      * breaks up by breaking up at it.
      *
      * 🚫 Deliberately not persisted to disk. The right size depends on which output is connected -
-     *    speaker, wire, Bluetooth - and the app is not told when that changes, so a figure
-     *    remembered across restarts would be a figure learned about some other output.
+     *    speaker, wire, Bluetooth - so a figure remembered across restarts would be a figure
+     *    learned about some other output. Within one run the output is watched: see [rerouted].
      * 🔴 **And not kept forever in memory either** - see DeviceBufferTuner.FORGET_AFTER_MS.
      */
     private var learnedFor: ScreamHeader? = null
@@ -45,6 +47,52 @@ class AudioTrackSink : AudioSink {
 
     /** When the device was last closed, on the elapsed-realtime clock; 0 while it is open. */
     private var releasedAt = 0L
+
+    /**
+     * The output the current track plays on, once the system has said - [NO_ROUTE] until then.
+     *
+     * 🔑 Written on the main thread by [routingListener], read on the playback thread.
+     */
+    @Volatile
+    private var routeId = NO_ROUTE
+
+    /** The output [learnedFrames] was learned on, [NO_ROUTE] if it is not known. */
+    @Volatile
+    private var learnedRoute = NO_ROUTE
+
+    /** The output a carried size came from, if this track opened at one; else [NO_ROUTE]. */
+    @Volatile
+    private var carriedFrom = NO_ROUTE
+
+    /**
+     * The track is playing somewhere other than where its buffer was sized - rebuild it.
+     *
+     * 🔴 **A track moved to another output keeps the buffer it was sized for.** Plugging in a USB
+     *    headset or connecting Bluetooth moves a live track to the new output, but the trimmed
+     *    size and the capacity behind it were measured against the old one, and the new output's
+     *    burst can be bigger than both. Reported 2026-10-10: the sound broke up after every
+     *    change of output and stayed broken until the app was switched off and on - which builds
+     *    a fresh track on the new output. A reroute now does the same thing by itself.
+     */
+    @Volatile
+    private var rerouted = false
+
+    /**
+     * 🔑 Runs on the main looper (no handler is passed). It fires once when the track first
+     *    reaches an output, which is not a change - only a *different* device is.
+     */
+    private val routingListener = AudioRouting.OnRoutingChangedListener { router ->
+        if (router !== track) return@OnRoutingChangedListener
+        val id = router.routedDevice?.id ?: return@OnRoutingChangedListener
+        val was = routeId
+        routeId = id
+        when {
+            was != NO_ROUTE && id != was -> rerouted = true
+            // Opened at a size learned on another output before an idle release.
+            was == NO_ROUTE && carriedFrom != NO_ROUTE && id != carriedFrom -> rerouted = true
+            was == NO_ROUTE -> learnedRoute = id
+        }
+    }
 
     /**
      * 🔑 Kept here as well as on the track, because [open] builds a **new** `AudioTrack` - after a
@@ -118,7 +166,10 @@ class AudioTrackSink : AudioSink {
         track = built
         openFormat = header
         framesWritten = 0L
+        routeId = NO_ROUTE
+        rerouted = false
         built.setVolume(gain)
+        built.addOnRoutingChangedListener(routingListener, null)
 
         val startFrames = built.bufferSizeInFrames
         deviceBufferInitialMs = framesToMs(startFrames, header.sampleRate)
@@ -158,6 +209,7 @@ class AudioTrackSink : AudioSink {
         } else {
             0
         }
+        carriedFrom = if (carried > 0) learnedRoute else NO_ROUTE
         if (learnedFor == header && carried == 0) {
             Log.i(TAG, "forgot $learnedFrames frames after ${closedForMs / 1000} s closed")
         }
@@ -197,6 +249,7 @@ class AudioTrackSink : AudioSink {
     }
 
     override fun write(data: ByteArray, offset: Int, length: Int): Int {
+        if (rerouted) reopenForNewRoute()
         val t = track ?: return 0
         if (framesWritten == 0L) {
             t.play()
@@ -210,6 +263,23 @@ class AudioTrackSink : AudioSink {
             tick(t, frames)
         }
         return written
+    }
+
+    /**
+     * Build the track again on the output it now plays on, forgetting what was learned elsewhere.
+     *
+     * 🔑 On the playback thread, at the top of a write - the same thread that opens and releases,
+     *    so nothing else touches the track meanwhile. What the old track still held is lost; the
+     *    switch of output already cut the sound there.
+     */
+    private fun reopenForNewRoute() {
+        val header = openFormat ?: return
+        Log.i(TAG, "output changed to device $routeId - reopening")
+        learnedFor = null
+        learnedFrames = 0
+        learnedRoute = NO_ROUTE
+        release()
+        open(header)
     }
 
     /**
@@ -287,6 +357,7 @@ class AudioTrackSink : AudioSink {
 
     override fun release() {
         track?.let {
+            it.removeOnRoutingChangedListener(routingListener)
             // 🔴 stop(), not pause()+flush(). Flushing throws away whatever has not reached the
             // speaker yet - including the fade the player writes on its way out, which is the
             // one thing standing between closing the device and a click. stop() plays it out.
@@ -301,12 +372,14 @@ class AudioTrackSink : AudioSink {
         track = null
         openFormat = null
         tuner = null
+        rerouted = false
         deviceBufferMs = 0
         deviceBufferInitialMs = 0
     }
 
     private companion object {
         const val TAG = "AudioTrackSink"
+        const val NO_ROUTE = 0
         const val ENCODING = AudioFormat.ENCODING_PCM_16BIT
 
         /** Long enough for the closing fade to reach the speaker before the device goes away. */
