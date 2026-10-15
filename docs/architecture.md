@@ -103,6 +103,17 @@ Now the device has to have been closed for `DeviceBufferTuner.FORGET_AFTER_MS` -
 before the next open starts small again. A shorter pause keeps what was learned, because a network
 that was bad a minute ago usually still is.
 
+🔴 **A track moved to another output keeps the buffer it was sized for.** Plugging in a USB headset
+or connecting Bluetooth moves a live track to the new output, but the trimmed size and the capacity
+behind it were measured against the old one, and the new output's burst can be bigger than both.
+The sound broke up after every change of output and stayed broken until the receiver was switched
+off and on (reported 2026-10-10) - which builds a fresh track on the new output. `AudioTrackSink`
+now does the same by itself: an `OnRoutingChangedListener` notes when the track reaches a
+*different* device (the first report, when the track first reaches any output, is not a change),
+and the playback thread rebuilds the track there, forgetting the size learned on the old output.
+The same goes for a track reopened after an idle release at a size learned on one output that
+then lands on another.
+
 🔴 **Three different things are called an underrun, and only one of them is about the buffer.**
 
 | what happened | what it means | how it is told apart |
